@@ -14,8 +14,8 @@ CHANNELS = {
         "video_original": "test.mp4",
         "video_wan": "test_wan.mp4",
         "duration": 5.0, # 5 segundos de duração do nosso vídeo teste
-        "ip_lan": "239.10.1.1", # IP Classe D - Range LAN definido pelo prof
-        "ip_wan": "239.20.1.1", # IP Classe D - Range WAN definido pelo prof
+        "ip_lan": "224.0.1.2", # IP de Multicast alinhado com o script r1.sh e r2.sh
+        "ip_wan": "224.0.1.2", # Mesmo IP para a WAN (o smcroute repassara para ambas as redes)
         "port": 5000
     }
 }
