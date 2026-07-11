@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Plataforma Mini-IPTV Multicast com controle avançado de banda.">
+    <title>Mini-IPTV | FRC</title>
+    <!-- Google Fonts: Inter for a modern, clean typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <main class="app-container">
+        <!-- Login Section -->
+        <section id="login-view" class="glass-panel active">
+            <header class="panel-header">
+                <h1>Mini-IPTV</h1>
+                <p>Acesse a plataforma de transmissão</p>
+            </header>
+            
+            <form id="login-form" class="auth-form">
+                <div class="input-group">
+                    <label for="username">Usuário</label>
+                    <input type="text" id="username" name="username" required autocomplete="username" placeholder="ex: admin ou hostx">
+                </div>
+                
+                <div class="input-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" name="password" required autocomplete="current-password" placeholder="Sua senha">
+                </div>
+                
+                <div id="login-error" class="error-message hidden" aria-live="polite"></div>
+                
+                <button type="submit" class="btn-primary" id="login-btn">
+                    <span class="btn-text">Entrar</span>
+                    <span class="loader hidden"></span>
+                </button>
+            </form>
+        </section>
+
+        <!-- Dashboard Section -->
+        <section id="dashboard-view" class="glass-panel hidden">
+            <header class="dashboard-header">
+                <div class="user-info">
+                    <h2>Grade de Canais</h2>
+                    <span id="user-badge" class="badge">Perfil: Carregando...</span>
+                </div>
+                <button id="logout-btn" class="btn-secondary">Sair</button>
+            </header>
+            
+            <div id="global-error" class="error-message hidden" aria-live="polite"></div>
+
+            <div class="channels-grid" id="channels-container">
+                <!-- Canais serão injetados aqui via Javascript -->
+            </div>
+        </section>
+    </main>
+
+    <script src="./app.js"></script>
+</body>
+</html>
