@@ -1,9 +1,11 @@
 Vagrant.configure("2") do |config|
   config.vm.box = "generic/ubuntu2204"
 
-  # Força aceleração de hardware (KVM) em vez de emulação (QEMU)
+  # Força aceleração de hardware (KVM) e reduz drasticamente o consumo de RAM/CPU
   config.vm.provider :libvirt do |libvirt|
     libvirt.driver = "kvm"
+    libvirt.memory = 512
+    libvirt.cpus = 1
   end
 
   # Roteador 1 (R1)
