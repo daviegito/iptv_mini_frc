@@ -17,11 +17,16 @@ Existem duas formas de rodar o projeto: durante o desenvolvimento simulado (Vagr
 Este modo serve para a equipe testar o codigo e as regras de rede antes do dia da apresentacao. Toda a topologia e simulada usando Maquinas Virtuais no seu computador.
 
 **Passos:**
-1. Suba as maquinas com: `vagrant up --no-parallel`.
-2. No terminal do R1 (`vagrant ssh r1`): Instale o Apache, copie a pasta `frontend` e configure o Proxy Reverso (`infra/apache_proxy.conf`).
-3. No terminal do R1 e R2: Instale o servidor DHCP (`isc-dhcp-server`), ative o Roteamento Multicast (IGMP) e aplique o controle de banda `tc` limitando a interface WAN do R2 a 115200 bps.
-4. No terminal S (`vagrant ssh s`): Instale o `ffmpeg` e o Python, entre na pasta `/vagrant/backend` e ligue o servidor com `uvicorn main:app --host 0.0.0.0 --port 8000`.
-5. No terminal X e Y (`vagrant ssh x`): Teste o recebimento dos pacotes.
+1. Suba as maquinas com o acelerador KVM ativado: `sg kvm -c "vagrant up --no-parallel"`.
+   *(Se a maquina travar no "Booting from Hard Disk", garanta que seu usuario faz parte dos grupos libvirt/kvm e que a pasta `/home/usuario` tem permissao de execucao `chmod +x`)*
+2. Como a box genérica do Linux não monta pastas automaticamente, envie os arquivos do projeto para as VMs:
+   - `vagrant upload backend/ backend/ s`
+   - `vagrant upload frontend/ frontend/ r1`
+   - `vagrant upload infra/ infra/ r1`
+3. No terminal do Servidor (`vagrant ssh s`): Instale o `ffmpeg` e o Python, entre na pasta `~/backend` e ligue o servidor com `uvicorn main:app --host 0.0.0.0 --port 8000`.
+4. No terminal do R1 (`vagrant ssh r1`): Configure o Apache e o Proxy Reverso usando a pasta `~/infra`. 
+5. No terminal do R1 e R2: Instale o servidor DHCP (`isc-dhcp-server`), ative o Roteamento Multicast (IGMP) e aplique o controle de banda `tc` na WAN do R2 (115200 bps).
+6. Nos terminais Clientes X e Y (`vagrant ssh x` ou `y`): Teste o recebimento dos pacotes de Video UDP Multicast escutando a rede com o tcpdump: `sudo tcpdump -i eth2 -n udp`
 
 ---
 

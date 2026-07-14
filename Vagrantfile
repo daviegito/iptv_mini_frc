@@ -1,5 +1,10 @@
 Vagrant.configure("2") do |config|
-  config.vm.box = "bento/ubuntu-22.04"
+  config.vm.box = "generic/ubuntu2204"
+
+  # Força aceleração de hardware (KVM) em vez de emulação (QEMU)
+  config.vm.provider :libvirt do |libvirt|
+    libvirt.driver = "kvm"
+  end
 
   # Roteador 1 (R1)
   config.vm.define "r1" do |r1|
