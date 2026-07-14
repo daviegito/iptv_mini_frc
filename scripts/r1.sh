@@ -23,3 +23,6 @@ ip a
 ip route
 sudo iptables -t nat -L -v -n
 cat /proc/net/ip_mr_vif
+
+# Regra de Ouro: Limitando a banda da interface WAN (ppp0) para 115200 bps
+sudo tc qdisc add dev ppp0 root tbf rate 115200bit burst 10kb latency 50ms
