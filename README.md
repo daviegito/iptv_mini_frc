@@ -24,8 +24,24 @@ Este modo serve para a equipe testar o codigo e as regras de rede antes do dia d
    - `vagrant upload frontend/ frontend/ r1`
    - `vagrant upload infra/ infra/ r1`
 3. No terminal do Servidor (`vagrant ssh s`): Instale o `ffmpeg` e o Python, entre na pasta `~/backend` e ligue o servidor com `uvicorn main:app --host 0.0.0.0 --port 8000`.
-4. No terminal do R1 (`vagrant ssh r1`): Configure o Apache e o Proxy Reverso usando a pasta `~/infra`. 
-5. No terminal do R1 e R2: Instale o servidor DHCP (`isc-dhcp-server`), ative o Roteamento Multicast (IGMP) e aplique o controle de banda `tc` na WAN do R2 (115200 bps).
+4. No terminal do R1 (`vagrant ssh r1`): Configure o Apache, Proxy Reverso, Roteamento e QoS com os comandos:
+   ```bash
+   sudo apt update && sudo apt install apache2 -y
+   sudo a2enmod proxy proxy_http rewrite
+   sudo cp -r ~/frontend/* /var/www/html/
+   sudo cp ~/infra/apache_proxy.conf /etc/apache2/sites-available/000-default.conf
+   sudo systemctl restart apache2
+   sudo sysctl -w net.ipv4.ip_forward=1
+   sudo sysctl -w net.ipv4.conf.all.mc_forwarding=1
+   sudo ip route add 192.168.0.0/24 via 10.0.0.253 dev eth2
+   sudo tc qdisc add dev eth2 root tbf rate 115200bit burst 10kb latency 50ms
+   ```
+5. No terminal do R2 (`vagrant ssh r2`): Habilite o Roteamento Multicast e a rota estática inversa:
+   ```bash
+   sudo sysctl -w net.ipv4.ip_forward=1
+   sudo sysctl -w net.ipv4.conf.all.mc_forwarding=1
+   sudo ip route add 172.16.0.0/24 via 10.0.0.254 dev eth1
+   ```
 6. Nos terminais Clientes X e Y (`vagrant ssh x` ou `y`): Teste o recebimento dos pacotes de Video UDP Multicast escutando a rede com o tcpdump: `sudo tcpdump -i eth2 -n udp`
 
 ---
